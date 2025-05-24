@@ -28,12 +28,22 @@ RUN wget https://github.com/Pathoschild/SMAPI/releases/download/4.1.10/SMAPI-4.1
 
 # Add Mods & Scripts
 COPY ["mods/", "/data/Stardew/Stardew Valley/Mods/"]
+
+# 设置 config.json 的权限和属主
+RUN touch /data/Stardew/Stardew\ Valley/Mods/AutoLoadGame/config.json && \
+    chmod 664 /data/Stardew/Stardew\ Valley/Mods/AutoLoadGame/config.json && \
+    chown 1000:1000 /data/Stardew/Stardew\ Valley/Mods/AutoLoadGame/config.json
+
 COPY scripts/ /opt/
 
 RUN chmod +x /data/Stardew/Stardew\ Valley/StardewValley && \
     chmod -R 777 /data/Stardew/ && \
     chown -R 1000:1000 /data/Stardew && \
     chmod +x /opt/*.sh
+
+# 保存构建好的 /data 内容到 /opt/default_data，用于后续挂载初始化
+RUN mkdir -p /opt/default_data && \
+    cp -r /data/* /opt/default_data/
 
 RUN mkdir /etc/services.d/utils && touch /etc/services.d/app/utils.dep
 COPY run /etc/services.d/utils/run 
