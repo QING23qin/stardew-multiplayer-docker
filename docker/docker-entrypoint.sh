@@ -1,14 +1,11 @@
 #!/bin/bash
+export HOME=/config
+
 if [ ! -f "/data/Stardew/Stardew Valley/StardewValley" ]; then
     echo "[初始化] /data 为空，正在拷贝默认游戏文件..."
     cp -r /opt/default_data/* /data/
     chown -R 1000:1000 /data
 fi
-
-# 原来的启动命令继续写在下面
-exec "$@"
-
-export HOME=/config
 
 for modPath in /data/Stardew/Stardew\ Valley/Mods/*/
 do
