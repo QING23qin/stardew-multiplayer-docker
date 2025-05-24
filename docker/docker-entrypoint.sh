@@ -1,5 +1,6 @@
 #!/bin/bash
 export HOME=/config
+export DISPLAY=:0
 
 if [ ! -f "/data/Stardew/Stardew Valley/StardewValley" ]; then
     echo "[初始化] /data 为空，正在拷贝默认游戏文件..."
@@ -38,11 +39,14 @@ done
 
 # Ready to start!
 
-export XAUTHORITY=~/.Xauthority
-TERM=
-sed -i -e 's/env TERM=xterm $LAUNCHER "$@"$/env SHELL=\/bin\/bash TERM=xterm xterm  -e "\/bin\/bash -c $LAUNCHER "$@""/' /data/Stardew/Stardew\ Valley/StardewValley
-
+cd "/data/Stardew/Stardew Valley"
 echo "启动 Stardew Valley..."
-bash /data/Stardew/Stardew\ Valley/StardewValley
 
-sleep 233333333333333
+if [ -f "StardewValley.exe" ]; then
+    exec mono StardewValley.exe
+elif [ -f "StardewValley" ]; then
+    exec ./StardewValley
+else
+    echo "找不到 Stardew Valley 可执行文件！"
+    sleep infinity
+fi
